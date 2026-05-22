@@ -171,7 +171,7 @@ circle {
   left: 0;
   width: 100%;
   height: 100%;
-  background: white;
+  background: linear-gradient(135deg, #f8fff8, #fff0f3);
   z-index: 9999;
   justify-content: center;
   align-items: center;
@@ -179,15 +179,16 @@ circle {
 
 .end-box {
   background: linear-gradient(135deg, #e8f5e9, #ffcdd2);
-  padding: 35px 40px;
-  border-radius: 28px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  padding: 40px 45px;
+  border-radius: 32px;
+  box-shadow: 0 14px 35px rgba(0,0,0,0.12);
   text-align: center;
-  width: 340px;
+  width: 360px;
+  border: 2px solid rgba(255,255,255,0.6);
 }
 
 .session-text {
-  font-size: 32px;
+  font-size: 30px;
   color: #739176;
   font-weight: bold;
   line-height: 1.4;
@@ -198,4 +199,96 @@ circle {
   font-size: 24px;
   color: #444;
   font-weight: bold;
+}
+
+.good-day-text {
+  margin-top: 18px;
+  font-size: 22px;
+  color: #ba9291;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.back-to-timer-btn {
+  margin-top: 22px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 14px;
+  background: #739176;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 5px 12px rgba(0,0,0,0.12);
+  transition: 0.25s ease;
+}
+
+.back-to-timer-btn:hover {
+  transform: scale(1.05);
+}
+
+.rewards-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 14px;
+  background: #739176;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 5px 12px rgba(0,0,0,0.12);
+  z-index: 1000;
+}
+
+.rewards-btn:hover {
+  transform: scale(1.05);
+}
+
+.rewards-page {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #e8f5e9, #ffcdd2);
+}
+
+.rewards-card {
+  background: linear-gradient(135deg, #e8f5e9, #ffcdd2);
+  padding: 40px 45px;
+  border-radius: 32px;
+  box-shadow: 0 14px 35px rgba(0,0,0,0.12);
+  text-align: center;
+  width: 360px;
+  border: 2px solid rgba(255,255,255,0.6);
+}
+
+.rewards-card h1 {
+  color: #739176;
+  margin-bottom: 10px;
+}
+
+.rewards-card p {
+  color: #444;
+  font-size: 18px;
+}
+
+.back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 14px;
+  background: #ba9291;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 5px 12px rgba(0,0,0,0.12);
+  z-index: 1000;
+}
+
+.back-btn:hover {
+  transform: scale(1.05);
 }
