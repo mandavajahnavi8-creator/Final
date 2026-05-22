@@ -1,207 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pomodoro Timer</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pomodoro Timer</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Pomodoro Timer ☘️</h1>
+<button id="rewardsBtn" class="rewards-btn">Rewards</button>
 
-    <label for="minutesInput">Work Minutes</label>
-    <input type="number" id="minutesInput" min="1" value="29">
+<div class="container">
+  <h1>Pomodoro Timer ☘️</h1>
 
-    <label for="breakMinutesInput">Break Minutes</label>
-    <input type="number" id="breakMinutesInput" min="1" value="5">
+  <label for="minutesInput">Work Minutes</label>
+  <input type="number" id="minutesInput" min="1" value="29">
 
-    <div class="toggle-wrap">
-      <input type="checkbox" id="autoBreakToggle">
-      <span>Enable Auto Break</span>
-    </div>
+  <label for="breakMinutesInput">Break Minutes</label>
+  <input type="number" id="breakMinutesInput" min="1" value="5">
 
-    <div class="mode" id="modeDisplay">
-      Work Session 💻
-    </div>
-
-    <div class="circle-wrap">
-      <svg class="circle" width="180" height="180">
-        <circle class="bg" cx="90" cy="90" r="78"></circle>
-        <circle class="progress" cx="90" cy="90" r="78"></circle>
-      </svg>
-      <div id="timer">29:00</div>
-    </div>
-
-    <div class="controls">
-      <button id="start">Start</button>
-      <button id="pause">Pause</button>
-      <button id="reset">Reset</button>
-      <button id="setTime">Set Time</button>
-      <button id="endSession">End Session</button>
-    </div>
+  <div class="toggle-wrap">
+    <input type="checkbox" id="autoBreakToggle">
+    <span>Enable Auto Break</span>
   </div>
 
-  <div id="blankScreen" class="blank-screen">
-    <div class="end-box">
-      <div id="sessionText" class="session-text"></div>
-      <div id="rewardText" class="reward-text"></div>
-    </div>
+  <div class="mode" id="modeDisplay">
+    Work Session 💻
   </div>
 
-  <script>
-    let defaultMinutes = 29;
-    let workMinutes = 29;
-    let breakMinutes = 5;
-    let totalSeconds = defaultMinutes * 60;
-    let interval = null;
-    let isBreak = false;
-    let sessionElapsedSeconds = 0;
-    let rewardPoints = 0;
+  <div class="circle-wrap">
+    <svg class="circle" width="180" height="180">
+      <circle class="bg" cx="90" cy="90" r="78"></circle>
+      <circle class="progress" cx="90" cy="90" r="78"></circle>
+    </svg>
+    <div id="timer">29:00</div>
+  </div>
 
-    const timerDisplay = document.getElementById("timer");
-    const modeDisplay = document.getElementById("modeDisplay");
-    const startBtn = document.getElementById("start");
-    const pauseBtn = document.getElementById("pause");
-    const resetBtn = document.getElementById("reset");
-    const setTimeBtn = document.getElementById("setTime");
-    const endSessionBtn = document.getElementById("endSession");
-    const minutesInput = document.getElementById("minutesInput");
-    const breakMinutesInput = document.getElementById("breakMinutesInput");
-    const autoBreakToggle = document.getElementById("autoBreakToggle");
-    const circle = document.querySelector(".progress");
-    const blankScreen = document.getElementById("blankScreen");
-    const sessionText = document.getElementById("sessionText");
-    const rewardText = document.getElementById("rewardText");
-    const radius = 78;
-    const circumference = 2 * Math.PI * radius;
+  <div class="controls">
+    <button id="start">Start</button>
+    <button id="pause">Pause</button>
+    <button id="reset">Reset</button>
+    <button id="setTime">Set Time</button>
+    <button id="endSession">End Session</button>
+  </div>
+</div>
 
-    circle.style.strokeDasharray = circumference;
-    circle.style.strokeDashoffset = circumference;
+<div id="blankScreen" class="blank-screen">
+  <div class="end-box">
+    <div id="sessionText" class="session-text"></div>
+    <div id="rewardText" class="reward-text"></div>
+    <div class="good-day-text">Have a good day ☀️</div>
+    <button id="backToTimer" class="back-to-timer-btn">Back to Timer</button>
+  </div>
+</div>
 
-    function updateCircle() {
-      const progress = totalSeconds / (defaultMinutes * 60);
-      const offset = circumference * (1 - progress);
-      circle.style.strokeDashoffset = offset;
-    }
+<script>
+let defaultMinutes = 29;
+let workMinutes = 29;
+let breakMinutes = 5;
+let totalSeconds = defaultMinutes * 60;
+let interval = null;
+let isBreak = false;
+let sessionElapsedSeconds = 0;
+let rewardPoints = 0;
 
-    function updateDisplay() {
-      const minutes = Math.floor(totalSeconds / 60);
-      let seconds = totalSeconds % 60;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
-      timerDisplay.textContent = `${minutes}:${seconds}`;
-      modeDisplay.textContent = isBreak ? "Break Time ☕" : "Work Session 💻";
-      updateCircle();
-    }
+const timerDisplay = document.getElementById("timer");
+const modeDisplay = document.getElementById("modeDisplay");
+const startBtn = document.getElementById("start");
+const pauseBtn = document.getElementById("pause");
+const resetBtn = document.getElementById("reset");
+const setTimeBtn = document.getElementById("setTime");
+const endSessionBtn = document.getElementById("endSession");
+const rewardsBtn = document.getElementById("rewardsBtn");
+const backToTimerBtn = document.getElementById("backToTimer");
+const minutesInput = document.getElementById("minutesInput");
+const breakMinutesInput = document.getElementById("breakMinutesInput");
+const autoBreakToggle = document.getElementById("autoBreakToggle");
+const circle = document.querySelector(".progress");
+const blankScreen = document.getElementById("blankScreen");
+const sessionText = document.getElementById("sessionText");
+const rewardText = document.getElementById("rewardText");
 
-    function startTimer() {
-      if (interval) return;
+const radius = 78;
+const circumference = 2 * Math.PI * radius;
 
-      interval = setInterval(() => {
-        if (totalSeconds <= 0) {
-          clearInterval(interval);
-          interval = null;
+circle.style.strokeDasharray = circumference;
+circle.style.strokeDashoffset = circumference;
 
-          if (autoBreakToggle.checked) {
-            if (!isBreak) {
-              alert("Work session finished! Break started ☕");
-              isBreak = true;
-              breakMinutes = parseInt(breakMinutesInput.value);
-              defaultMinutes = breakMinutes;
-              totalSeconds = breakMinutes * 60;
-              updateDisplay();
-              startTimer();
-            } else {
-              alert("Break finished! Back to work 💻");
-              isBreak = false;
-              defaultMinutes = workMinutes;
-              totalSeconds = workMinutes * 60;
-              updateDisplay();
-              startTimer();
-            }
-          } else {
-            alert("Time's up!");
-          }
+function updateCircle() {
+  const progress = totalSeconds / (defaultMinutes * 60);
+  const offset = circumference * (1 - progress);
+  circle.style.strokeDashoffset = offset;
+}
 
-          return;
-        }
+function updateDisplay() {
+  const minutes = Math.floor(totalSeconds / 60);
+  let seconds = totalSeconds % 60;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+  timerDisplay.textContent = `${minutes}:${seconds}`;
+  modeDisplay.textContent = isBreak ? "Break Time ☕" : "Work Session 💻";
+  updateCircle();
+}
 
-        totalSeconds--;
-        sessionElapsedSeconds++;
-        updateDisplay();
-      }, 1000);
-    }
+function startTimer() {
+  if (interval) return;
 
-    function pauseTimer() {
+  interval = setInterval(() => {
+    if (totalSeconds <= 0) {
       clearInterval(interval);
       interval = null;
-    }
 
-    function resetTimer() {
-      pauseTimer();
-      isBreak = false;
-      sessionElapsedSeconds = 0;
-      rewardPoints = 0;
-      defaultMinutes = workMinutes;
-      totalSeconds = workMinutes * 60;
-      updateDisplay();
-      blankScreen.style.display = "none";
-      sessionText.textContent = "";
-      rewardText.textContent = "";
-    }
-
-    function setCustomTime() {
-      pauseTimer();
-      workMinutes = parseInt(minutesInput.value);
-      breakMinutes = parseInt(breakMinutesInput.value);
-
-      if (
-        isNaN(workMinutes) ||
-        workMinutes <= 0 ||
-        isNaN(breakMinutes) ||
-        breakMinutes <= 0
-      ) {
-        alert("Enter valid numbers");
-        return;
+      if (autoBreakToggle.checked) {
+        if (!isBreak) {
+          alert("Work session finished! Break started ☕");
+          isBreak = true;
+          breakMinutes = parseInt(breakMinutesInput.value);
+          defaultMinutes = breakMinutes;
+          totalSeconds = breakMinutes * 60;
+          updateDisplay();
+          startTimer();
+        } else {
+          alert("Break finished! Back to work 💻");
+          isBreak = false;
+          defaultMinutes = workMinutes;
+          totalSeconds = workMinutes * 60;
+          updateDisplay();
+          startTimer();
+        }
+      } else {
+        alert("Time's up!");
       }
-
-      defaultMinutes = workMinutes;
-      totalSeconds = workMinutes * 60;
-      sessionElapsedSeconds = 0;
-      rewardPoints = 0;
-      isBreak = false;
-      blankScreen.style.display = "none";
-      sessionText.textContent = "";
-      rewardText.textContent = "";
-      updateDisplay();
+      return;
     }
 
-    function calculateRewardPoints(seconds) {
-      const hoursStudied = seconds / 3600;
-      return Math.round(hoursStudied * 100);
-    }
-
-    function formatTime(seconds) {
-      const mins = Math.floor(seconds / 60);
-      const secs = seconds % 60;
-      return `${mins} minute${mins !== 1 ? "s" : ""} and ${secs} second${secs !== 1 ? "s" : ""}`;
-    }
-
-    function endSession() {
-      pauseTimer();
-      rewardPoints = calculateRewardPoints(sessionElapsedSeconds);
-      blankScreen.style.display = "flex";
-      sessionText.textContent = `Session lasted ${formatTime(sessionElapsedSeconds)}.`;
-      rewardText.textContent = `Reward earned: ${rewardPoints} points.`;
-    }
-
-    startBtn.addEventListener("click", startTimer);
-    pauseBtn.addEventListener("click", pauseTimer);
-    resetBtn.addEventListener("click", resetTimer);
-    setTimeBtn.addEventListener("click", setCustomTime);
-    endSessionBtn.addEventListener("click", endSession);
-
+    totalSeconds--;
+    sessionElapsedSeconds++;
     updateDisplay();
-  </script>
+  }, 1000);
+}
+
+function pauseTimer() {
+  clearInterval(interval);
+  interval = null;
+}
+
+function resetTimer() {
+  pauseTimer();
+  isBreak = false;
+  sessionElapsedSeconds = 0;
+  rewardPoints = 0;
+  defaultMinutes = workMinutes;
+  totalSeconds = workMinutes * 60;
+  updateDisplay();
+  blankScreen.style.display = "none";
+  sessionText.textContent = "";
+  rewardText.textContent = "";
+}
+
+function setCustomTime() {
+  pauseTimer();
+  workMinutes = parseInt(minutesInput.value);
+  breakMinutes = parseInt(breakMinutesInput.value);
+
+  if (
+    isNaN(workMinutes) ||
+    workMinutes <= 0 ||
+    isNaN(breakMinutes) ||
+    breakMinutes <= 0
+  ) {
+    alert("Enter valid numbers");
+    return;
+  }
+
+  defaultMinutes = workMinutes;
+  totalSeconds = workMinutes * 60;
+  sessionElapsedSeconds = 0;
+  rewardPoints = 0;
+  isBreak = false;
+  blankScreen.style.display = "none";
+  sessionText.textContent = "";
+  rewardText.textContent = "";
+  updateDisplay();
+}
+
+function calculateRewardPoints(seconds) {
+  const hoursStudied = seconds / 3600;
+  return Math.round(hoursStudied * 100);
+}
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins} minute${mins !== 1 ? "s" : ""} and ${secs} second${secs !== 1 ? "s" : ""}`;
+}
+
+function endSession() {
+  pauseTimer();
+  rewardPoints = calculateRewardPoints(sessionElapsedSeconds);
+  blankScreen.style.display = "flex";
+  sessionText.textContent = `Session lasted ${formatTime(sessionElapsedSeconds)}.`;
+
+  if (sessionElapsedSeconds < 3600) {
+    rewardText.textContent = "Study more to earn!";
+  } else {
+    rewardText.textContent = `Reward earned: ${rewardPoints} points.`;
+  }
+}
+
+rewardsBtn.addEventListener("click", () => {
+  window.location.href = "rewards.html";
+});
+
+backToTimerBtn.addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+
+startBtn.addEventListener("click", startTimer);
+pauseBtn.addEventListener("click", pauseTimer);
+resetBtn.addEventListener("click", resetTimer);
+setTimeBtn.addEventListener("click", setCustomTime);
+endSessionBtn.addEventListener("click", endSession);
+
+updateDisplay();
+</script>
 </body>
 </html>
